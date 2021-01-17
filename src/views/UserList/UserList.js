@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -42,6 +43,31 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function UserList() {
+  const [data, setData] = useState([]);
+  const [query, setQuery] = useState();
+  const [url, setUrl] = useState("http://localhost:3000/api/v1/users");
+  const [tableHead, setTableHead] = useState([]);
+
+  useEffect(async () => {
+    const fetchData = async () => {
+      const result = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN1YmVlLmFkbWluQHN1YmVlLmFwcCIsImVtYWlsUHJvdmlkZXIiOiJnb29nbGUiLCJyb2xlcyI6WyJzdXBlcl9hZG1pbiJdLCJpYXQiOjE2MTA4NTcyMDEsImV4cCI6MTYxMDg2MDgwMX0.tRtfd8aObEEd5LWixXPhFNpCS1-ISPZswiSKEZPH_lM`
+        }
+      });
+      // TODO: handle error
+      // .catch(err => throw new Error(`Data Fetch Failed: ${url} fail`));
+
+      const data = result.data.data;
+      const users = data.map(e => Object.values(e));
+
+      setData(users);
+      setTableHead(Object.keys(data[0]));
+    };
+
+    fetchData();
+  }, []);
+
   const classes = useStyles();
   return (
     <GridContainer>
@@ -56,15 +82,8 @@ export default function UserList() {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["LoginProvider", "Email", "Phone Number", "Gender", "Joining Date"]}
-              tableData={[
-                ["Google", "example@subee.app", "7788148155", "남", "2020-01-11"],
-                ["Google", "example@subee.app", "7788148155", "남", "2020-01-11"],
-                ["Google", "example@subee.app", "7788148155", "남", "2020-01-11"],
-                ["Google", "example@subee.app", "7788148155", "남", "2020-01-11"],
-                ["Google", "example@subee.app", "7788148155", "남", "2020-01-11"],
-                ["Google", "example@subee.app", "7788148155", "남", "2020-01-11"],
-              ]}
+              tableHead={tableHead}
+              tableData={data}
             />
           </CardBody>
         </Card>

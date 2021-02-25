@@ -117,7 +117,7 @@ const buttonStyle = {
     }
   },
   primary: {
-    backgroundColor: primaryColor[0],
+    backgroundColor: primaryColor[3],
     boxShadow:
       "0 2px 2px 0 rgba(" +
       hexToRgb(primaryColor[0]) +

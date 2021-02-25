@@ -12,7 +12,7 @@ const cardStyle = {
     marginBottom: "25px",
     marginTop: "10px",
     borderRadius: "6px",
-    color: "rgba(" + hexToRgb(subeeColor) + ", 0.87)",
+    color: "rgba(" + hexToRgb(blackColor) + ", 0.87)",
     background: whiteColor,
     width: "100%",
     boxShadow: "0 1px 4px 0 rgba(" + hexToRgb(blackColor) + ", 0.14)",

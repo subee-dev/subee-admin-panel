@@ -27,12 +27,12 @@ import Language from "@material-ui/icons/Language";
 
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
-import SubscriptionUpdate from "views/SubscriptionUpdate/SubscriptionUpdate.js";
-import UserList from "views/UserList/UserList.js";
+import Subscriptions from "views/Subscriptions/Subscriptions.js";
 import Typography from "views/Typography/Typography.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 
-// core components/views for RTL layout
+// core components/views for sub pages
+
 
 const dashboardRoutes = [
   {
@@ -44,19 +44,11 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/subscriptionUpdate",
-    name: "Subscription Update",
-    rtlName: "subscription update",
+    path: "/subscriptions",
+    name: "Subscriptions",
+    rtlName: "subscriptions",
     icon: "content_paste",
-    component: SubscriptionUpdate,
-    layout: "/admin"
-  },
-  {
-    path: "/userlist",
-    name: "User List",
-    rtlName: "User List",
-    icon: Person,
-    component: UserList,
+    component: Subscriptions,
     layout: "/admin"
   },
   {

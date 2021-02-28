@@ -27,12 +27,11 @@ import Language from "@material-ui/icons/Language";
 
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
-import Subscriptions from "views/Subscriptions/Subscriptions.js";
+import Subscriptions from "views/Subscriptions/index.js";
 import Typography from "views/Typography/Typography.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 
 // core components/views for sub pages
-
 
 const dashboardRoutes = [
   {

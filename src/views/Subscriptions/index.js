@@ -33,9 +33,97 @@ const SubUpdateBtn = () => {
   );
 };
 
+const mockData = [
+  {
+    id: 1,
+    logo: null,
+    nameKr: "스파티파이",
+    nameEn: "spotify",
+    description: "music streaming",
+    recommended: 0,
+    notRecommended: 0,
+    averageRating: null,
+    createdAt: "2021-02-22T20:29:33.052Z",
+    updatedAt: "2021-02-22T20:29:33.052Z",
+    tiers: [
+      {
+        id: 2,
+        name: "individual",
+        billingCycles: [
+          {
+            name: "monthly",
+            price: 9.99
+          }
+        ]
+      },
+      {
+        id: 3,
+        name: "duo",
+        billingCycles: [
+          {
+            name: "monthly",
+            price: 12.99
+          },
+          {
+            name: "weekly",
+            price: 12.99
+          },
+          {
+            name: "daily",
+            price: 1.99
+          }
+        ]
+      }
+    ],
+    serviceProvider: {
+      id: 2,
+      name: "spotify"
+    },
+    tags: []
+  },
+  {
+    id: 2,
+    logo: null,
+    nameKr: "유투브",
+    nameEn: "youtube",
+    description: "video streaming",
+    recommended: 0,
+    notRecommended: 0,
+    averageRating: null,
+    createdAt: "2021-02-22T20:29:33.052Z",
+    updatedAt: "2021-02-22T20:29:33.052Z",
+    tiers: [
+      {
+        id: 2,
+        name: "individual",
+        billingCycles: [
+          {
+            name: "monthly",
+            price: 9.99
+          }
+        ]
+      },
+      {
+        id: 3,
+        name: "teams",
+        billingCycles: [
+          {
+            name: "monthly",
+            price: 12.99
+          }
+        ]
+      }
+    ],
+    serviceProvider: {
+      id: 5,
+      name: "google"
+    },
+    tags: []
+  }
+];
+
 export default function Subscriptions() {
   const classes = useStyles();
-  const subUpdateBtns = SubUpdateBtn();
   return (
     <Router>
       <div>
@@ -49,7 +137,7 @@ export default function Subscriptions() {
             </Card>
             {/* TODO: Hook the button with drawer */}
             <Button>Add</Button>
-            <SubList />
+            <SubList subscriptions={mockData} />
           </GridItem>
         </GridContainer>
       </div>

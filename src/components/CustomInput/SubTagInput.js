@@ -1,39 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
 // @material-ui/icons
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+import Grid from "@material-ui/core/Grid";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Checkbox from "@material-ui/core/Checkbox";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
 
 // core components
 import styles from "assets/jss/material-dashboard-react/components/subTagInputStyle.js";
-
-
-//Taginput Test
-
-const TAGNOTSELECTED = [
-  "Animation",
-  "Audio",
-  "Benefit",
-  "Beneift"
-]
-
-const TAGSELECTED = [
-  'Book',
-  "Business",
-  "Cloud",
-  "Collaboration"
-]
-
+import { enumToArray } from "common/helper";
+import { Tags } from "../../common/constants";
 
 const useStyles = makeStyles(styles);
 
@@ -45,14 +29,16 @@ function intersection(a, b) {
   return a.filter((value) => b.indexOf(value) !== -1);
 }
 
-export default function SubTagInput() {
+export default function SubTagInput(props) {
+  const { tags, setTags } = props;
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState(TAGNOTSELECTED);
-  const [right, setRight] = React.useState(TAGSELECTED);
+  const [checked, setChecked] = useState([]);
+  const [left, setLeft] = useState(
+    Object.values(Tags).filter((t) => !tags.includes(t)),
+  );
 
   const leftChecked = intersection(checked, left);
-  const rightChecked = intersection(checked, right);
+  const rightChecked = intersection(checked, tags);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -68,14 +54,14 @@ export default function SubTagInput() {
   };
 
   const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked));
+    setTags(tags.concat(leftChecked));
     setLeft(not(left, leftChecked));
     setChecked(not(checked, leftChecked));
   };
 
   const handleCheckedLeft = () => {
     setLeft(left.concat(rightChecked));
-    setRight(not(right, rightChecked));
+    setTags(not(tags, rightChecked));
     setChecked(not(checked, rightChecked));
   };
 
@@ -86,13 +72,18 @@ export default function SubTagInput() {
           const labelId = `transfer-list-item-${value}-label`;
 
           return (
-            <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+            <ListItem
+              key={value}
+              role="listitem"
+              button
+              onClick={handleToggle(value)}
+            >
               <ListItemIcon>
                 <Checkbox
                   checked={checked.indexOf(value) !== -1}
                   tabIndex={-1}
                   disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
+                  inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={`${value}`} />
@@ -105,7 +96,13 @@ export default function SubTagInput() {
   );
 
   return (
-    <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+    <Grid
+      container
+      spacing={2}
+      justify="center"
+      alignItems="center"
+      className={classes.root}
+    >
       <Grid item>
         <h4>Unselected</h4>
         {customList(left)}
@@ -136,7 +133,7 @@ export default function SubTagInput() {
       </Grid>
       <Grid item>
         <h4>Selected</h4>
-        {customList(right)}
+        {customList(tags)}
       </Grid>
     </Grid>
   );

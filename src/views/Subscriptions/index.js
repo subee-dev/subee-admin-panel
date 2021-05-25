@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import SubscriptionManager from "../../data/manager/index";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -52,9 +53,9 @@ const mockData = [
         billingCycles: [
           {
             name: "monthly",
-            price: 9.99
-          }
-        ]
+            price: 9.99,
+          },
+        ],
       },
       {
         id: 3,
@@ -62,24 +63,24 @@ const mockData = [
         billingCycles: [
           {
             name: "monthly",
-            price: 12.99
+            price: 12.99,
           },
           {
             name: "weekly",
-            price: 12.99
+            price: 12.99,
           },
           {
             name: "daily",
-            price: 1.99
-          }
-        ]
-      }
+            price: 1.99,
+          },
+        ],
+      },
     ],
     serviceProvider: {
       id: 2,
-      name: "spotify"
+      name: "spotify",
     },
-    tags: []
+    tags: [],
   },
   {
     id: 2,
@@ -99,9 +100,9 @@ const mockData = [
         billingCycles: [
           {
             name: "monthly",
-            price: 9.99
-          }
-        ]
+            price: 9.99,
+          },
+        ],
       },
       {
         id: 3,
@@ -109,21 +110,37 @@ const mockData = [
         billingCycles: [
           {
             name: "monthly",
-            price: 12.99
-          }
-        ]
-      }
+            price: 12.99,
+          },
+        ],
+      },
     ],
     serviceProvider: {
       id: 5,
-      name: "google"
+      name: "google",
     },
-    tags: []
-  }
+    tags: [],
+  },
 ];
 
 export default function Subscriptions() {
   const classes = useStyles();
+
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  useEffect(() => {
+    async function fetchSubscriptions() {
+      try {
+        let response = await SubscriptionManager.fetchAllSubcriptions();
+
+        setSubscriptions(response.data);
+      } catch (error) {
+        throw error;
+      }
+    }
+    fetchSubscriptions();
+  }, []);
+
   return (
     <Router>
       <div>
@@ -137,7 +154,7 @@ export default function Subscriptions() {
             </Card>
             {/* TODO: Hook the button with drawer */}
             <Button>Add</Button>
-            <SubList subscriptions={mockData} />
+            <SubList subscriptions={subscriptions} />
           </GridItem>
         </GridContainer>
       </div>

@@ -14,7 +14,7 @@ export class Subscription {
   updatedAt;
   recommended;
   notRecommended;
-  averageRate;
+  averageRating;
   tiers;
   serviceProvider;
   tags;
@@ -29,7 +29,7 @@ export class Subscription {
     this.updatedAt = subscription.updatedAt;
     this.recommended = subscription.recommended;
     this.notRecommended = subscription.notRecommended;
-    this.averageRate = subscription.averageRate;
+    this.averageRating = subscription.averageRating;
     this.tiers = subscription.tiers;
     this.serviceProvider = subscription.serviceProvider;
     this.tags = subscription.tags;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import classNames from "classnames";
 import PropTypes from "prop-types";
@@ -23,12 +23,16 @@ import styles from "assets/jss/material-dashboard-react/components/cardStyle.js"
 import Button from "components/CustomButtons/Button.js";
 import TierEdit from "components/Tiers";
 import { Divider } from "@material-ui/core";
+import { Subscription } from "../../data/models/subscription";
+
+import SubscriptionManager from "../../data/manager/index";
+import Card from "../../components/Card/Card";
 
 // TextField Test
 
 var subinfo = {
   subName: "Subee",
-  companyName: "Subee Inc."
+  companyName: "Subee Inc.",
 };
 
 const useStyles = makeStyles(styles);
@@ -40,10 +44,18 @@ export default function SubUpdate(props) {
   const classes = useStyles();
 
   const [nameKr, setNameKr] = useState(data.nameKr);
+  const [logo, setLogo] = useState(data.logo);
   const [nameEn, setNameEn] = useState(data.nameEn);
   const [description, setDescription] = useState(data.description);
   const [tiers, setTiers] = useState(data.tiers);
   const [serviceProvider, setServiceProvider] = useState(data.serviceProvider);
+  const [tags, setTags] = useState(data.tags.map((t) => t.name));
+
+  const handleUpdateNameKr = (e) => setNameKr(e.target.value);
+
+  const handleUpdateNameEn = (e) => setNameEn(e.target.value);
+
+  const handleUpdateDescription = (e) => setDescription(e.target.value);
 
   const handleUpdateTiers = (tier) => {
     const updatedTiers = tiers;
@@ -52,28 +64,71 @@ export default function SubUpdate(props) {
     setTiers(updatedTiers);
   };
 
+  const handleUpdateTags = (tags) => setTags(tags);
+
+  const handleUpdateLogo = (logo) => setLogo(logo);
+
+  const handleOnSubmit = async () => {
+    const updatedSubscription = new Subscription({
+      id: data.id,
+      nameKr: nameKr,
+      nameEn: nameEn,
+      logo: logo,
+      description: description,
+      // tiers: tiers,
+      // serviceProvider: serviceProvider,
+      tags: tags,
+    });
+    console.log("up: ", updatedSubscription);
+
+    await SubscriptionManager.updateSubscription(updatedSubscription);
+
+    onSubmit();
+  };
+
   return (
     <GridItem xs={12} sm={12} md={12}>
       <CardBody>
         <h4 className={classes.cardTitle}>Subscription Basic Information</h4>
-        <TextInputField label="Subscription Name" defaultValue={nameKr} />
-        <TextInputField label="Subscription Name" defaultValue={nameEn} />
+        <TextInputField
+          label="Subscription Korean Name"
+          defaultValue={nameKr}
+          onChange={handleUpdateNameKr}
+        />
+        <TextInputField
+          label="Subscription English Name"
+          defaultValue={nameEn}
+          onChange={handleUpdateNameEn}
+        />
 
-        <TextInputField label="Description" defaultValue={description} />
+        <TextInputField
+          label="Description"
+          defaultValue={description}
+          onChange={handleUpdateDescription}
+        />
         <h4 className={classes.cardTitle}>Update Tiers</h4>
-        {tiers.map((tier, index) => {
-          return (
-            <React.Fragment key={tier.id}>
-              <TierEdit tier={tier} handleUpdate={handleUpdateTiers} />
-              {index != tiers.length - 1 ? <Divider /> : null}
-            </React.Fragment>
-          );
-        })}
+        {tiers &&
+          tiers.map((tier, index) => {
+            return (
+              <React.Fragment key={tier.id}>
+                <TierEdit tier={tier} handleUpdate={handleUpdateTiers} />
+                {index != tiers.length - 1 ? <Divider /> : null}
+              </React.Fragment>
+            );
+          })}
         <h4 className={classes.cardTitle}>Subscription Tags</h4>
-        <SubTagInput />
+        <SubTagInput tags={tags} setTags={handleUpdateTags} />
+        {logo && (
+          <div>
+            <h4 className={classes.cardTitle}>Current Logo</h4>
+            <Card>
+              <img src={`data:image/jpeg;base64,${logo}`} />
+            </Card>
+          </div>
+        )}
         <h4 className={classes.cardTitle}>Update Logo</h4>
-        <ImageInputField />
-        <Button onClick={onSubmit}>Update Information</Button>
+        <ImageInputField logo={logo} setLogo={handleUpdateLogo} />
+        <Button onClick={handleOnSubmit}>Update Information</Button>
       </CardBody>
     </GridItem>
   );
@@ -81,5 +136,5 @@ export default function SubUpdate(props) {
 
 SubUpdate.propTypes = {
   data: PropTypes.object,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };

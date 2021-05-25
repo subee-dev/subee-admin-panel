@@ -14,7 +14,7 @@ function getModalStyle() {
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
+    transform: `translate(-${top}%, -${left}%)`,
   };
 }
 
@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
-  }
+    padding: theme.spacing(2, 4, 3),
+  },
 }));
 
 export default function EditDrawer(props) {
@@ -50,6 +50,7 @@ export default function EditDrawer(props) {
   const onEdit = () => {
     console.log("editing");
     handleClose();
+    window.location.reload();
   };
 
   const body = (
@@ -75,5 +76,5 @@ export default function EditDrawer(props) {
 }
 
 EditDrawer.propTypes = {
-  row: PropTypes.object
+  row: PropTypes.object,
 };

@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-import axios from "axios";
 
 //import css
 import "react-dropzone-uploader/dist/styles.css";
@@ -15,10 +14,11 @@ import SubscriptionManager from "../../data/manager/index";
 
 // import styles
 import styles from "assets/jss/material-dashboard-react/components/cardStyle.js";
-import { Button } from "@material-ui/core";
+import { Button, TableBody } from "@material-ui/core";
 import { Subscription } from "../../data/models/subscription";
 import { DataGrid } from "@material-ui/data-grid";
 import EditDrawer from "../../components/Drawer/editDrawer";
+import { Table } from "@material-ui/core/Table";
 
 // TextField Test
 const useStyles = makeStyles(styles);
@@ -27,11 +27,9 @@ export default function SubList(props) {
   const { subscriptions } = props;
   const classes = useStyles();
 
-  const structureMockData = useMemo(() => {
+  const structureData = useMemo(() => {
     return subscriptions.map((data) => new Subscription(data));
   }, [subscriptions]);
-
-  SubscriptionManager.testSubscriptions();
 
   const handleDelete = (id) => {
     SubscriptionManager.deleteSubscription(id);
@@ -39,6 +37,21 @@ export default function SubList(props) {
 
   const columns = useMemo(() => {
     return [
+      {
+        field: "edit",
+        headerName: "Edit",
+        width: 100,
+        renderCell: (params) => {
+          return <EditDrawer row={params.row} />;
+        },
+      },
+      { field: "id", headerName: "ID", width: 100 },
+      {
+        field: "logo",
+        headerName: "Logo",
+        width: 100,
+        valueGetter: (params) => (params.row.logo != null ? "O" : "X"),
+      },
       { field: "nameKr", headerName: "Kor Name", width: 150 },
       { field: "nameEn", headerName: "Eng Name", width: 150 },
       { field: "description", headerName: "Description", width: 150 },
@@ -47,35 +60,23 @@ export default function SubList(props) {
       {
         field: "notRecommended",
         headerName: "# of Not Recommended",
-        width: 150
+        width: 150,
       },
-      { field: "averageRate", headerName: "Average Rating", width: 150 },
+      { field: "averageRating", headerName: "Average Rating", width: 150 },
       {
         field: "serviceProvider",
         headerName: "Service Provider",
         width: 150,
-        valueGetter: (params) => {
-          return params.row.serviceProvider.name;
-        }
-      },
-      {
-        field: "edit",
-        headerName: "Edit",
-        width: 200,
-        renderCell: (params) => {
-          return <EditDrawer row={params.row} />;
-        }
+        valueGetter: (params) => params.row?.serviceProvider?.name ?? "n/a",
       },
       {
         field: "delete",
         headerName: "Delete",
         width: 200,
-        renderCell: (params) => {
-          return (
-            <Button onClick={() => handleDelete(params.row.id)}>Delete</Button>
-          );
-        }
-      }
+        renderCell: (params) => (
+          <Button onClick={() => handleDelete(params.row.id)}>Delete</Button>
+        ),
+      },
     ];
   }, []);
 
@@ -83,9 +84,9 @@ export default function SubList(props) {
     <div>
       <DataGrid
         autoHeight={true}
-        autoPageSize={true}
+        pageSize={15}
         hideFooterSelectedRowCount={true}
-        rows={structureMockData}
+        rows={structureData}
         columns={columns}
       />
     </div>
@@ -93,5 +94,5 @@ export default function SubList(props) {
 }
 
 SubList.proptype = {
-  subscriptions: PropTypes.array
+  subscriptions: PropTypes.array,
 };

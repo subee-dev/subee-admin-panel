@@ -1,8 +1,10 @@
 const { default: axios } = require("axios");
 
 const baseConfig = {
-  baseURL: "https://dev.subee-api.com",
-  // baseURL: "https://prod.subee-api.com",
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "https://prod.subee-api.com"
+      : "https://dev.subee-api.com",
   headers: {
     authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
   },
